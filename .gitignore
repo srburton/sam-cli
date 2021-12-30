@@ -1,2 +1,2 @@
-.aws-sam/*
-.aws-sam-temp/*
+.aws-sam
+.aws-sam-temp
