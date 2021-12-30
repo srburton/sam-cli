@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-python-profile
+Globals:
+  Function:
+    Timeout: 60
+
+Parameters:
+  CodeUri:
+    Type: String
+    Default: src/
+  Region:
+    Type: String
+    Default: us-east-2
+  Runtime:
+    Type: String
+    Default: python3.8
+    
+Resources:
+  GetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: !Ref CodeUri
+      Handler: app.get
+      Runtime: !Ref Runtime
+      Environment:
+        Variables:
+          REGION: !Ref Region
+      Events:
+        GetProfile:
+          Type: Api
+          Properties:
+            Path: /api/profile
+            Method: get  
+  UpdateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: !Ref CodeUri
+      Handler: app.update
+      Runtime: !Ref Runtime
+      Environment:
+        Variables:
+          REGION: !Ref Region
+      Events:
+        UpdateProfile:
+          Type: Api
+          Properties:
+            Path: /api/profile
+            Method: put
+
+Outputs:
+  ProfileApi:
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod/"
+  GetFunction:
+    Value: !GetAtt GetFunction.Arn
+  GetFunctionIamRole:
+    Value: !GetAtt GetFunction.Arn
+  UpdateFunction:
+    Value: !GetAtt UpdateFunction.Arn
+  UpdateFunctionIamRole:
+    Value: !GetAtt UpdateFunctionRole.Arn
